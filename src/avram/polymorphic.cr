@@ -1,12 +1,14 @@
 module Avram::Polymorphic
   macro polymorphic(name, associations)
     def {{ name.id }}
-      # Given a list of associations [:post, :video]
-      #
-      # Will generate:
-      #
-      #    post || video
+      # Generates something like: post || video
       {{ associations.map(&.id).join(" || ").id }}
+    end
+
+    def {{ name.id }}!
+      # Generates something like: post! || video!
+      {% associations_with_a_bang = associations.map(&.id).map { |assoc| "#{assoc}!" } %}
+      {{ associations_with_a_bang.join(" || ").id }}
     end
 
     macro finished
