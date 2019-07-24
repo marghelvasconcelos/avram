@@ -6,6 +6,18 @@ require "./validations/callable_error_message"
 module Avram::Validations
   extend self
 
+  # Validates that at most one attribute is filled
+  #
+  # If more than one attribute is filled it will mark all but the first filled
+  # field invalid.
+  def validate_at_most_one_filled(*attributes, message : Avram::Attribute::ErrorMessage = "must be blank")
+    present_attributes = attributes.reject(&.value.blank?)
+
+    if present_attributes.size > 1
+      present_attributes.skip(1).each(&.add_error(message))
+    end
+  end
+
   # Validates that the passed in attributes have values
   #
   # You can pass in one or more attributes at a time. The attribute will be
