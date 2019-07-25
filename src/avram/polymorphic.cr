@@ -20,6 +20,14 @@ module Avram::Polymorphic
           validate_at_most_one_filled {{ list_of_foreign_keys.map(&.id).join(", ").id }}
         end
       end
+
+      class BaseQuery
+        def preload_{{ name.id }}
+          {% for association in associations %}
+             preload_{{ association.id }}
+          {% end %}
+        end
+      end
     end
   end
 end
